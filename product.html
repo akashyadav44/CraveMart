@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product – CraveMart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <script src="js/cravemart.js" defer></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--brand:#C8401A;--brand-dark:#9E2E0E;--brand-light:#FAF0EC;--cream:#FFFBF7;--dark:#1C1208;--muted:#7A6A5A;--border:#EDE5DC;--success:#2D7A3A}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
+    .breadcrumb{display:flex;align-items:center;gap:8px;padding:1.2rem 2.5rem;font-size:0.82rem;color:var(--muted)}
+    .breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--brand)}.breadcrumb .sep{color:var(--border)}
+    .product-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;padding:0 2.5rem 4rem;max-width:1100px}
+    .product-gallery{position:sticky;top:90px;height:fit-content}
+    .main-img{width:100%;aspect-ratio:1/1;background:linear-gradient(135deg,#F5E6D3,#FAD7C0);border-radius:32px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10rem;position:relative;overflow:hidden}
+    .img-badge{position:absolute;top:20px;left:20px;background:var(--brand);color:#fff;border-radius:8px;padding:5px 12px;font-size:0.78rem;font-weight:700}
+    .thumbs{display:flex;gap:0.75rem;margin-top:1rem}
+    .thumb{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,#FAF0EC,#F5E0CC);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:border-color .2s}
+    .thumb.active,.thumb:hover{border-color:var(--brand)}
+    .product-info{padding-top:0.5rem}
+    .category-tag{display:inline-flex;align-items:center;gap:6px;background:var(--brand-light);color:var(--brand);border-radius:50px;padding:0.3rem 0.9rem;font-size:0.75rem;font-weight:600;margin-bottom:1rem}
+    .product-title{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;line-height:1.1;margin-bottom:0.8rem}
+    .rating-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+    .stars{color:#F5A623;font-size:1rem}.rating-count{font-size:0.85rem;color:var(--muted)}
+    .price-row{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem}
+    .price-main{font-family:'Fraunces',serif;font-size:2rem;font-weight:700}
+    .price-old{font-size:1rem;color:var(--muted);text-decoration:line-through}
+    .discount-pill{background:#E8F5E9;color:var(--success);border-radius:50px;padding:3px 10px;font-size:0.78rem;font-weight:700}
+    .desc{font-size:0.95rem;color:var(--muted);line-height:1.75;margin-bottom:1.8rem}
+    .section-label{font-weight:600;font-size:0.88rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:0.75rem}
+    .options-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem}
+    .option-chip{border:1.5px solid var(--border);border-radius:50px;padding:0.45rem 1.1rem;font-size:0.85rem;font-weight:500;cursor:pointer;transition:all .2s;background:#fff}
+    .option-chip:hover,.option-chip.active{border-color:var(--brand);background:var(--brand-light);color:var(--brand)}
+    .qty-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.8rem}
+    .qty-ctrl{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:50px;overflow:hidden}
+    .q-btn{width:40px;height:40px;border:none;background:none;font-size:1.2rem;cursor:pointer;transition:background .2s}
+    .q-btn:hover{background:var(--brand-light)}
+    .q-num{width:44px;text-align:center;font-weight:700;font-size:1rem}
+    .action-row{display:flex;gap:1rem;margin-bottom:2rem}
+    .btn-add{flex:1;background:var(--brand);color:#fff;border:none;border-radius:50px;padding:1rem 2rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-add:hover{background:var(--brand-dark);transform:translateY(-1px)}
+    .btn-wish{width:52px;height:52px;border-radius:50%;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .btn-wish:hover{border-color:var(--brand);background:var(--brand-light)}
+    .meta-tags{display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:2rem}
+    .meta-tag{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:0.5rem 0.9rem;font-size:0.8rem;font-weight:500;color:var(--muted)}
+    .meta-tag i{color:var(--brand);font-size:15px}
+    hr{border:none;border-top:1px solid var(--border);margin:1.8rem 0}
+    .nutrition-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem}
+    .nut-card{background:var(--brand-light);border-radius:14px;padding:0.9rem;text-align:center}
+    .nut-val{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--brand)}
+    .nut-label{font-size:0.72rem;color:var(--muted);margin-top:2px}
+    .reviews-section{padding:0 2.5rem 4rem}
+    .reviews-title{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:700;margin-bottom:1.5rem}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+    .review-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:1.4rem}
+    .reviewer{display:flex;align-items:center;gap:10px;margin-bottom:0.8rem}
+    .avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;flex-shrink:0}
+    .reviewer-name{font-weight:600;font-size:0.9rem}.reviewer-date{font-size:0.75rem;color:var(--muted)}
+    .review-stars{color:#F5A623;font-size:0.85rem;margin-bottom:0.5rem}
+    .review-text{font-size:0.85rem;color:var(--muted);line-height:1.6}
+    .related-section{padding:0 2.5rem 4rem}
+    .related-title{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:700;margin-bottom:1.5rem}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem}
+    .related-card{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;cursor:pointer;transition:all .22s}
+    .related-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(200,64,26,.1)}
+    .related-img{height:130px;background:linear-gradient(135deg,#FAF0EC,#F5E0CC);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+    .related-info{padding:0.85rem 1rem}
+    .related-name{font-weight:600;font-size:0.9rem;margin-bottom:4px}
+    .related-price{font-size:0.88rem;font-weight:700;color:var(--brand)}
+    @media(max-width:768px){.product-layout{grid-template-columns:1fr;padding:0 1.5rem 3rem;gap:2rem}.product-gallery{position:static}.breadcrumb{padding:1rem 1.5rem}}
+  </style>
+</head>
+<body>
+<div id="cm-navbar-root"></div>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a><span class="sep">/</span>
+  <a href="index.html#menu" id="bcCat">Indian</a><span class="sep">/</span>
+  <span id="bcName">Product</span>
+</div>
+
+<div class="product-layout">
+  <div class="product-gallery">
+    <div class="main-img" id="mainImg">
+      <div class="img-badge" id="pBadge">Bestseller</div>
+      <span id="mainEmoji">🍛</span>
+    </div>
+    <div class="thumbs">
+      <div class="thumb active" onclick="switchImg(document.getElementById('mainEmoji').textContent,this)">🍛</div>
+      <div class="thumb" onclick="switchImg('🍚',this)">🍚</div>
+      <div class="thumb" onclick="switchImg('🫓',this)">🫓</div>
+      <div class="thumb" onclick="switchImg('🥗',this)">🥗</div>
+    </div>
+  </div>
+  <div class="product-info">
+    <div class="category-tag"><i class="ti ti-fire" style="font-size:13px"></i> <span id="pCat">Indian Cuisine</span></div>
+    <h1 class="product-title" id="pName">Butter Chicken</h1>
+    <div class="rating-row">
+      <span class="stars">★★★★★</span>
+      <span id="pRating" style="font-weight:700">4.9</span>
+      <span class="rating-count" id="pReviews">(342 reviews)</span>
+    </div>
+    <div class="price-row">
+      <span class="price-main" id="pPrice">₹249</span>
+      <span class="price-old" id="pOld">₹349</span>
+      <span class="discount-pill" id="pDisc">29% off</span>
+    </div>
+    <p class="desc" id="pDesc">Rich, velvety tomato-cream gravy slow-cooked with tender marinated chicken. Served with fragrant basmati rice and warm butter naan.</p>
+    <div class="meta-tags">
+      <div class="meta-tag"><i class="ti ti-clock"></i> Ready in 20 mins</div>
+      <div class="meta-tag"><i class="ti ti-flame"></i> 520 kcal</div>
+      <div class="meta-tag"><i class="ti ti-users"></i> Serves 1–2</div>
+      <div class="meta-tag"><i class="ti ti-leaf"></i> Halal</div>
+    </div>
+    <div class="section-label">Spice level</div>
+    <div class="options-row">
+      <div class="option-chip" onclick="selectOpt(this)">🌿 Mild</div>
+      <div class="option-chip active" onclick="selectOpt(this)">🌶️ Medium</div>
+      <div class="option-chip" onclick="selectOpt(this)">🔥 Hot</div>
+      <div class="option-chip" onclick="selectOpt(this)">💀 Extra Hot</div>
+    </div>
+    <div class="section-label">Add-ons</div>
+    <div class="options-row">
+      <div class="option-chip" onclick="this.classList.toggle('active')">+ Butter Naan ₹39</div>
+      <div class="option-chip" onclick="this.classList.toggle('active')">+ Extra Rice ₹29</div>
+      <div class="option-chip" onclick="this.classList.toggle('active')">+ Raita ₹25</div>
+    </div>
+    <div class="qty-row">
+      <span class="section-label" style="margin:0">Quantity</span>
+      <div class="qty-ctrl">
+        <button class="q-btn" onclick="changeQty(-1)">−</button>
+        <span class="q-num" id="qtyNum">1</span>
+        <button class="q-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <span id="qtyTotal" style="font-weight:700;font-size:1.1rem">₹249</span>
+    </div>
+    <div class="action-row">
+      <button class="btn-add" id="addToCartBtn"><i class="ti ti-shopping-cart"></i> Add to Cart</button>
+      <button class="btn-wish" id="wishBtn" onclick="toggleWish(this)">🤍</button>
+    </div>
+    <hr/>
+    <div class="section-label" style="margin-bottom:1rem">Nutrition per serving</div>
+    <div class="nutrition-grid">
+      <div class="nut-card"><div class="nut-val">520</div><div class="nut-label">Calories</div></div>
+      <div class="nut-card"><div class="nut-val">32g</div><div class="nut-label">Protein</div></div>
+      <div class="nut-card"><div class="nut-val">18g</div><div class="nut-label">Fat</div></div>
+      <div class="nut-card"><div class="nut-val">48g</div><div class="nut-label">Carbs</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="reviews-section">
+  <div class="reviews-title">Customer Reviews</div>
+  <div class="reviews-grid">
+    <div class="review-card"><div class="reviewer"><div class="avatar" style="background:#FAF0EC;color:#C8401A">PK</div><div><div class="reviewer-name">Priya K.</div><div class="reviewer-date">3 days ago</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Absolutely divine! Creamy, perfectly spiced, generous portion. Will order again!</div></div>
+    <div class="review-card"><div class="reviewer"><div class="avatar" style="background:#E8F5E9;color:#2D7A3A">RS</div><div><div class="reviewer-name">Rahul S.</div><div class="reviewer-date">1 week ago</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Best butter chicken delivered at home. The gravy texture is spot on.</div></div>
+    <div class="review-card"><div class="reviewer"><div class="avatar" style="background:#E6F1FB;color:#185FA5">AM</div><div><div class="reviewer-name">Ananya M.</div><div class="reviewer-date">2 weeks ago</div></div></div><div class="review-stars">★★★★☆</div><div class="review-text">Loved the taste! Arrived in under 25 minutes. Hot spice level was perfect.</div></div>
+  </div>
+</div>
+
+<div class="related-section">
+  <div class="related-title">You might also like</div>
+  <div class="related-grid" id="relatedGrid"></div>
+</div>
+
+<script>
+  let qty = 1;
+  let currentProduct = null;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    Navbar.render();
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id')) || 1;
+    currentProduct = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+    loadProduct(currentProduct);
+    renderRelated(currentProduct);
+  });
+
+  function loadProduct(p) {
+    document.title = p.name + ' – CraveMart';
+    document.getElementById('pName').textContent    = p.name;
+    document.getElementById('pPrice').textContent   = '₹' + p.price;
+    document.getElementById('pDesc').textContent    = p.desc;
+    document.getElementById('pRating').textContent  = p.rating;
+    document.getElementById('pReviews').textContent = '(' + p.reviews + ' reviews)';
+    document.getElementById('mainEmoji').textContent = p.emoji;
+    document.getElementById('pCat').textContent     = p.cat.charAt(0).toUpperCase()+p.cat.slice(1)+' Cuisine';
+    document.getElementById('bcName').textContent   = p.name;
+    document.getElementById('bcCat').textContent    = p.cat.charAt(0).toUpperCase()+p.cat.slice(1);
+    document.getElementById('qtyTotal').textContent = '₹' + p.price;
+    if (p.old) {
+      document.getElementById('pOld').textContent  = '₹' + p.old;
+      document.getElementById('pDisc').textContent = Math.round((1 - p.price/p.old)*100) + '% off';
+    } else {
+      document.getElementById('pOld').style.display  = 'none';
+      document.getElementById('pDisc').style.display = 'none';
+    }
+    if (p.badge) { document.getElementById('pBadge').textContent = p.badge; }
+    else { document.getElementById('pBadge').style.display = 'none'; }
+    document.getElementById('addToCartBtn').onclick = () => {
+      for (let i = 0; i < qty; i++) Cart.add(p);
+    };
+  }
+
+  function renderRelated(current) {
+    const related = PRODUCTS.filter(p => p.id !== current.id && p.cat === current.cat).slice(0,4);
+    const others  = PRODUCTS.filter(p => p.id !== current.id && p.cat !== current.cat).slice(0, 4 - related.length);
+    const list    = [...related, ...others].slice(0,4);
+    document.getElementById('relatedGrid').innerHTML = list.map(p => `
+      <div class="related-card" onclick="window.location.href='product.html?id=${p.id}'">
+        <div class="related-img">${p.emoji}</div>
+        <div class="related-info">
+          <div class="related-name">${p.name}</div>
+          <div class="related-price">₹${p.price}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function changeQty(d) {
+    qty = Math.max(1, qty + d);
+    document.getElementById('qtyNum').textContent   = qty;
+    document.getElementById('qtyTotal').textContent = '₹' + (qty * (currentProduct?.price || 0));
+  }
+  function selectOpt(el) {
+    el.closest('.options-row').querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function switchImg(emoji, el) {
+    document.getElementById('mainEmoji').textContent = emoji;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function toggleWish(btn) {
+    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+    Toast.show(btn.textContent === '❤️' ? '❤️ Saved to wishlist!' : '💔 Removed from wishlist');
+  }
+</script>
+</body>
+</html>

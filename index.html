@@ -1,0 +1,581 @@
+ <!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CraveMart – Food that makes you crave more</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <script src="js/cravemart.js" defer></script>
+  <style>
+    :root {
+      --brand:#E8420A;
+      --brand2:#FF6B35;
+      --cream:#FFFBF7;
+      --dark:#0F0A05;
+      --card:#FFFFFF;
+      --text:#1C1208;
+      --muted:#7A6A5A;
+      --border:#EDE5DC;
+      --nav-bg:rgba(255,251,247,0.85);
+    }
+    [data-theme="dark"] {
+      --cream:#0F0A05;
+      --card:#1A1208;
+      --text:#F5EDE0;
+      --muted:#8A7A6A;
+      --border:#2A1F15;
+      --nav-bg:rgba(15,10,5,0.85);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;transition:background .3s,color .3s}
+
+    /* ── CANVAS BACKGROUND ─────────────────────────── */
+    #bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.07}
+    [data-theme="dark"] #bgCanvas{opacity:0.12}
+
+
+
+    /* ── NAVBAR ────────────────────────────────────── */
+    .navbar{
+      position:fixed;top:0;left:0;right:0;z-index:1000;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 2.5rem;height:68px;
+      background:var(--nav-bg);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      transition:all .3s;
+    }
+    .nav-logo{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:900;color:var(--brand);text-decoration:none;letter-spacing:-1px}
+    .nav-logo span{color:var(--text)}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:var(--muted);transition:color .2s;letter-spacing:.3px}
+    .nav-links a:hover{color:var(--brand)}
+    .nav-right{display:flex;align-items:center;gap:0.75rem}
+    .theme-btn{
+      width:44px;height:24px;border-radius:50px;border:none;cursor:pointer;
+      background:var(--border);position:relative;transition:all .3s;flex-shrink:0;
+    }
+    .theme-btn::after{
+      content:'';position:absolute;top:3px;left:3px;
+      width:18px;height:18px;border-radius:50%;
+      background:var(--brand);transition:all .3s;
+    }
+    [data-theme="dark"] .theme-btn{background:#3A2A1A}
+    [data-theme="dark"] .theme-btn::after{transform:translateX(20px)}
+    .theme-icon{font-size:14px;color:var(--muted);margin-right:2px}
+    .nav-cart{
+      display:flex;align-items:center;gap:6px;
+      background:var(--brand);color:#fff;border:none;border-radius:50px;
+      padding:0.5rem 1.2rem;font-family:'DM Sans',sans-serif;
+      font-size:0.85rem;font-weight:600;cursor:pointer;
+      text-decoration:none;transition:all .25s;position:relative;
+    }
+    .nav-cart:hover{background:var(--brand2);transform:translateY(-1px)}
+    .cart-dot{
+      background:#fff;color:var(--brand);border-radius:50%;
+      width:18px;height:18px;font-size:10px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .hamburger{display:none;background:none;border:1px solid var(--border);border-radius:8px;width:38px;height:38px;cursor:pointer;align-items:center;justify-content:center;color:var(--text);font-size:1.2rem}
+
+    /* ── HERO ──────────────────────────────────────── */
+    .hero{
+      min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+      align-items:center;gap:3rem;padding:6rem 2.5rem 4rem;
+      position:relative;z-index:1;
+    }
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(232,66,10,0.12);color:var(--brand);
+      border:1px solid rgba(232,66,10,0.25);
+      border-radius:50px;padding:0.4rem 1rem;
+      font-size:0.78rem;font-weight:600;margin-bottom:1.5rem;
+      letter-spacing:.5px;text-transform:uppercase;
+    }
+    .live-dot{width:7px;height:7px;background:var(--brand);border-radius:50%;animation:livePulse 1.2s infinite}
+    @keyframes livePulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+    .hero h1{
+      font-family:'Fraunces',serif;
+      font-size:clamp(3rem,5.5vw,5rem);
+      font-weight:900;line-height:1.02;
+      color:var(--text);margin-bottom:1.5rem;
+      letter-spacing:-2px;
+    }
+    .hero h1 .accent{
+      color:var(--brand);font-style:italic;
+      position:relative;display:inline-block;
+    }
+    .hero h1 .accent::after{
+      content:'';position:absolute;bottom:-4px;left:0;right:0;
+      height:3px;background:var(--brand);border-radius:2px;
+      animation:lineGrow 1s ease forwards;transform-origin:left;
+    }
+    @keyframes lineGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    .hero-desc{font-size:1.05rem;color:var(--muted);line-height:1.8;margin-bottom:2.5rem;max-width:500px;font-weight:300}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+    .btn-main{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--brand);color:#fff;border:none;border-radius:50px;
+      padding:0.9rem 2.2rem;font-family:'DM Sans',sans-serif;
+      font-size:0.95rem;font-weight:600;cursor:pointer;
+      text-decoration:none;transition:all .25s;letter-spacing:.3px;
+    }
+    .btn-main:hover{background:var(--brand2);transform:translateY(-2px)}
+    .btn-ghost{
+      display:inline-flex;align-items:center;gap:8px;
+      background:transparent;color:var(--text);
+      border:1.5px solid var(--border);border-radius:50px;
+      padding:0.9rem 2rem;font-family:'DM Sans',sans-serif;
+      font-size:0.95rem;font-weight:500;cursor:pointer;
+      text-decoration:none;transition:all .25s;
+    }
+    .btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+    .hero-stats{display:flex;gap:2.5rem}
+    .stat-item{display:flex;flex-direction:column;gap:2px}
+    .stat-num{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:var(--text);letter-spacing:-1px}
+    .stat-num .plus{color:var(--brand)}
+    .stat-label{font-size:0.75rem;color:var(--muted);font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+
+    /* ── HERO VISUAL ───────────────────────────────── */
+    .hero-visual{position:relative;display:flex;justify-content:center;align-items:center}
+    .main-bowl{
+      width:420px;height:420px;border-radius:50%;
+      background:linear-gradient(135deg,rgba(232,66,10,0.08),rgba(255,107,53,0.04));
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;
+    }
+    .bowl-emoji{font-size:7rem;animation:bowlFloat 3s ease-in-out infinite;z-index:2}
+    @keyframes bowlFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-18px) rotate(3deg)}}
+    .orbit-ring{
+      position:absolute;border-radius:50%;border:1px dashed rgba(232,66,10,0.2);
+      animation:spinRing linear infinite;
+    }
+    .ring1{width:280px;height:280px;animation-duration:12s}
+    .ring2{width:380px;height:380px;animation-duration:20s;animation-direction:reverse}
+    @keyframes spinRing{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    .ring-dot{
+      position:absolute;top:50%;left:50%;
+      width:36px;height:36px;border-radius:50%;
+      background:var(--card);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.1rem;transform-origin:center;
+    }
+    .floating-pill{
+      position:absolute;background:var(--card);
+      border:1px solid var(--border);border-radius:16px;
+      padding:0.65rem 1rem;display:flex;align-items:center;gap:9px;
+      font-size:0.8rem;font-weight:500;color:var(--text);
+      box-shadow:0 4px 20px rgba(0,0,0,0.06);
+    }
+    .pill1{top:30px;right:-20px;animation:pillBob 3s ease-in-out infinite}
+    .pill2{bottom:50px;left:-30px;animation:pillBob 3s ease-in-out infinite .8s}
+    .pill3{top:160px;right:-50px;animation:pillBob 3s ease-in-out infinite 1.5s}
+    @keyframes pillBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .pill-icon{
+      width:30px;height:30px;border-radius:8px;
+      background:rgba(232,66,10,0.1);display:flex;align-items:center;
+      justify-content:center;font-size:1rem;
+    }
+    .pill-sub{font-size:0.68rem;color:var(--muted)}
+
+    /* ── CATEGORIES ────────────────────────────────── */
+    .section{padding:5rem 2.5rem;position:relative;z-index:1}
+    .section-label{
+      display:inline-flex;align-items:center;gap:6px;
+      color:var(--brand);font-size:0.75rem;font-weight:600;
+      text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem;
+    }
+    .section-title{font-family:'Fraunces',serif;font-size:2.5rem;font-weight:900;color:var(--text);letter-spacing:-1px;margin-bottom:.5rem}
+    .section-sub{font-size:0.95rem;color:var(--muted);margin-bottom:2.5rem}
+    .cats{display:flex;gap:.75rem;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:none}
+    .cats::-webkit-scrollbar{display:none}
+    .cat-chip{
+      display:flex;align-items:center;gap:8px;flex-shrink:0;
+      background:var(--card);border:1px solid var(--border);
+      border-radius:50px;padding:.6rem 1.3rem;
+      font-size:0.85rem;font-weight:500;color:var(--text);
+      cursor:pointer;transition:all .2s;
+    }
+    .cat-chip:hover,.cat-chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+    /* ── PRODUCTS ──────────────────────────────────── */
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem}
+    .product-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:24px;overflow:hidden;cursor:pointer;
+      transition:all .3s;position:relative;
+    }
+    .product-card:hover{transform:translateY(-6px);border-color:rgba(232,66,10,0.3);box-shadow:0 20px 50px rgba(232,66,10,0.1)}
+    .product-img{
+      height:190px;display:flex;align-items:center;justify-content:center;
+      font-size:5rem;position:relative;
+      background:linear-gradient(135deg,rgba(232,66,10,0.05),transparent);
+    }
+    .prod-badge{
+      position:absolute;top:12px;left:12px;
+      background:var(--brand);color:#fff;
+      border-radius:8px;padding:3px 9px;font-size:0.68rem;font-weight:700;letter-spacing:.3px;text-transform:uppercase;
+    }
+    .wish-btn{
+      position:absolute;top:12px;right:12px;
+      width:34px;height:34px;border-radius:50%;
+      background:var(--card);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;font-size:1rem;transition:all .2s;
+    }
+    .wish-btn:hover{border-color:var(--brand);transform:scale(1.1)}
+    .product-info{padding:1.2rem 1.4rem}
+    .prod-rating{display:flex;align-items:center;gap:4px;font-size:0.75rem;color:var(--muted);margin-bottom:6px}
+    .stars{color:#F59E0B}
+    .prod-name{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:-.3px}
+    .prod-desc{font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:1rem}
+    .prod-footer{display:flex;align-items:center;justify-content:space-between}
+    .prod-price{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:900;color:var(--text)}
+    .prod-price .old{font-size:0.78rem;font-weight:400;color:var(--muted);text-decoration:line-through;margin-left:4px}
+    .add-btn{
+      background:var(--dark);color:#fff;border:none;border-radius:50px;
+      padding:.5rem 1.1rem;font-size:0.78rem;font-weight:600;cursor:pointer;
+      display:flex;align-items:center;gap:4px;transition:all .2s;
+    }
+    [data-theme="dark"] .add-btn{background:var(--brand)}
+    .add-btn:hover{background:var(--brand)}
+
+    /* ── PROMO ─────────────────────────────────────── */
+    .promo-section{padding:0 2.5rem 5rem;position:relative;z-index:1}
+    .promo-wrap{
+      background:var(--brand);border-radius:32px;
+      padding:3.5rem 4rem;display:flex;align-items:center;
+      justify-content:space-between;position:relative;overflow:hidden;
+    }
+    .promo-wrap::before{
+      content:'';position:absolute;right:-80px;top:-80px;
+      width:400px;height:400px;border-radius:50%;
+      background:rgba(255,255,255,0.07);
+    }
+    .promo-wrap::after{
+      content:'';position:absolute;left:-60px;bottom:-60px;
+      width:300px;height:300px;border-radius:50%;
+      background:rgba(0,0,0,0.08);
+    }
+    .promo-tag{
+      background:rgba(255,255,255,0.2);color:#fff;
+      border-radius:6px;padding:3px 10px;font-size:0.72rem;
+      font-weight:700;display:inline-block;margin-bottom:1rem;
+      letter-spacing:1px;text-transform:uppercase;
+    }
+    .promo-wrap h2{font-family:'Fraunces',serif;font-size:2.5rem;font-weight:900;color:#fff;margin-bottom:.5rem;letter-spacing:-1px;line-height:1.1}
+    .promo-wrap p{color:rgba(255,255,255,0.7);font-size:0.95rem;margin-bottom:1.8rem}
+    .promo-emoji-wrap{font-size:7rem;position:relative;z-index:2;animation:promoBob 2s ease-in-out infinite}
+    @keyframes promoBob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg) translateY(-8px)}}
+    .btn-white{
+      display:inline-flex;align-items:center;gap:8px;
+      background:#fff;color:var(--brand);border:none;border-radius:50px;
+      padding:.9rem 2rem;font-family:'DM Sans',sans-serif;
+      font-size:0.92rem;font-weight:700;cursor:pointer;
+      text-decoration:none;transition:all .25s;
+    }
+    .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.2)}
+
+    /* ── FOOTER ────────────────────────────────────── */
+    footer{
+      border-top:1px solid var(--border);padding:1.5rem 2.5rem;
+      display:flex;align-items:center;justify-content:space-between;
+      position:relative;z-index:1;flex-wrap:wrap;gap:1rem;
+    }
+    .footer-logo{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:900;color:var(--brand);letter-spacing:-.5px}
+    .footer-logo span{color:var(--text)}
+    .footer-copy{font-size:0.8rem;color:var(--muted)}
+
+    /* ── TOAST ─────────────────────────────────────── */
+    #toast{
+      position:fixed;bottom:2rem;right:2rem;
+      background:var(--dark);color:#fff;
+      padding:.9rem 1.4rem;border-radius:16px;
+      font-size:0.85rem;font-weight:500;
+      opacity:0;transform:translateY(20px);
+      transition:all .3s;pointer-events:none;z-index:9999;
+    }
+    [data-theme="dark"] #toast{background:#2A1F15;border:1px solid var(--border)}
+    #toast.show{opacity:1;transform:translateY(0)}
+
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;padding:5rem 1.5rem 3rem;min-height:auto}
+      .hero-visual{display:none}
+      .navbar{padding:0 1.5rem}
+      .nav-links{display:none}
+      .hamburger{display:flex}
+      .section,.promo-section{padding:3rem 1.5rem}
+      .promo-wrap{padding:2rem;flex-direction:column;gap:1.5rem}
+      .hero-stats{gap:1.5rem}
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Crave<span>Mart</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#offers">Offers</a></li>
+    <li id="navAuthLink"><a href="login.html">Login</a></li>
+  </ul>
+  <div class="nav-right">
+    <i class="ti ti-sun theme-icon" id="themeIcon" aria-hidden="true"></i>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode"></button>
+    <a href="cart.html" class="nav-cart">
+      <i class="ti ti-shopping-cart" aria-hidden="true"></i>
+      Cart
+      <span class="cart-dot cm-cart-count">0</span>
+    </a>
+    <button class="hamburger" id="hamBtn" aria-label="Menu"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow"><div class="live-dot"></div> Live delivery in your city</div>
+    <h1>Food that<br>makes you<br><span class="accent">crave</span> more</h1>
+    <p class="hero-desc">Fresh ingredients, bold flavors — delivered hot at your door. From quick bites to full feasts in 30 minutes.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-main"><i class="ti ti-bowl" aria-hidden="true"></i> Explore Menu</a>
+      <a href="cart.html" class="btn-ghost"><i class="ti ti-shopping-cart" aria-hidden="true"></i> View Cart</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">500<span class="plus">+</span></span><span class="stat-label">Menu Items</span></div>
+      <div class="stat-item"><span class="stat-num">4.9<span class="plus">★</span></span><span class="stat-label">Avg Rating</span></div>
+      <div class="stat-item"><span class="stat-num">12K<span class="plus">+</span></span><span class="stat-label">Happy Foodies</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="main-bowl">
+      <div class="orbit-ring ring1">
+        <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(0deg) translateX(140px) rotate(0deg)">🌶️</div>
+        <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(120deg) translateX(140px) rotate(-120deg)">🧄</div>
+        <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(240deg) translateX(140px) rotate(-240deg)">🌿</div>
+      </div>
+      <div class="orbit-ring ring2">
+        <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(60deg) translateX(190px) rotate(-60deg)">🍅</div>
+        <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(180deg) translateX(190px) rotate(-180deg)">🧅</div>
+        <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(300deg) translateX(190px) rotate(-300deg)">🫚</div>
+      </div>
+      <div class="bowl-emoji" id="heroEmoji">🍜</div>
+    </div>
+    <div class="floating-pill pill1">
+      <div class="pill-icon">⚡</div>
+      <div><div>Delivery time</div><div class="pill-sub">28 mins avg</div></div>
+    </div>
+    <div class="floating-pill pill2">
+      <div class="pill-icon">🔥</div>
+      <div><div>Today's Special</div><div class="pill-sub">Butter Chicken</div></div>
+    </div>
+    <div class="floating-pill pill3">
+      <div class="pill-icon">🎉</div>
+      <div><div>CRAVE30</div><div class="pill-sub">30% off first order</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section" id="menu">
+  <div class="section-label"><i class="ti ti-bowl" aria-hidden="true"></i> Browse</div>
+  <div class="section-title">What are you craving?</div>
+  <div class="section-sub">Choose your favourite cuisine and we'll do the rest</div>
+  <div class="cats">
+    <div class="cat-chip active" onclick="filterCat(this,'all')">🍽️ All</div>
+    <div class="cat-chip" onclick="filterCat(this,'indian')">🍛 Indian</div>
+    <div class="cat-chip" onclick="filterCat(this,'pizza')">🍕 Pizza</div>
+    <div class="cat-chip" onclick="filterCat(this,'burger')">🍔 Burgers</div>
+    <div class="cat-chip" onclick="filterCat(this,'sushi')">🍱 Sushi</div>
+    <div class="cat-chip" onclick="filterCat(this,'dessert')">🍰 Desserts</div>
+    <div class="cat-chip" onclick="filterCat(this,'drinks')">🥤 Drinks</div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- PROMO -->
+<div class="promo-section" id="offers">
+  <div class="promo-wrap">
+    <div style="position:relative;z-index:2">
+      <div class="promo-tag">Limited Time</div>
+      <h2>First order<br>30% off.</h2>
+      <p>Use code CRAVE30 at checkout. New users only.<br>Free delivery included!</p>
+      <!-- <a href="signup.html" class="btn-white"><i class="ti ti-gift" aria-hidden="true"></i> Claim Offer</a> -->
+    </div>
+    <div class="promo-emoji-wrap">🎊</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Crave<span>Mart</span></div>
+  <div class="footer-copy">© 2026 CraveMart — Made with ❤️ for food lovers</div>
+  <div style="font-size:0.8rem;color:var(--muted)">
+    <!-- <a href="login.html" style="color:var(--muted);text-decoration:none;margin-right:1rem">Login</a>
+    <a href="signup.html" style="color:var(--muted);text-decoration:none">Sign up</a> -->
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+const PRODUCTS=[
+  {id:1,name:'Butter Chicken',desc:'Creamy tomato gravy, tender chicken, basmati rice',price:249,old:349,emoji:'🍛',cat:'indian',badge:'Bestseller',rating:'4.9',reviews:342},
+  {id:2,name:'Margherita Pizza',desc:'San Marzano tomatoes, fresh mozzarella, basil',price:319,old:399,emoji:'🍕',cat:'pizza',badge:'Hot',rating:'4.8',reviews:218},
+  {id:3,name:'Smash Burger',desc:'Double patty, cheddar, caramelised onion, secret sauce',price:199,old:249,emoji:'🍔',cat:'burger',badge:'New',rating:'4.7',reviews:156},
+  {id:4,name:'Dragon Roll',desc:'Shrimp tempura, avocado, spicy mayo',price:389,old:null,emoji:'🍱',cat:'sushi',badge:null,rating:'4.9',reviews:89},
+  {id:5,name:'Gulab Jamun',desc:'Soft milk-solid dumplings in rose syrup',price:99,old:149,emoji:'🍮',cat:'dessert',badge:'Sweet',rating:'4.8',reviews:201},
+  {id:6,name:'Mango Lassi',desc:'Fresh Alphonso mangoes, thick yogurt, cardamom',price:89,old:null,emoji:'🥭',cat:'drinks',badge:null,rating:'4.7',reviews:167},
+  {id:7,name:'Paneer Tikka',desc:'Charred paneer, peppers, mint chutney',price:179,old:229,emoji:'🧆',cat:'indian',badge:'Veg',rating:'4.8',reviews:289},
+  {id:8,name:'BBQ Chicken Pizza',desc:'Smoky BBQ sauce, grilled chicken, red onions',price:349,old:429,emoji:'🍕',cat:'pizza',badge:null,rating:'4.6',reviews:143},
+];
+
+// ── Theme ────────────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  document.getElementById('themeIcon').className=isDark?'ti ti-moon theme-icon':'ti ti-sun theme-icon';
+  localStorage.setItem('cm-theme',isDark?'light':'dark');
+}
+(function(){
+  const saved=localStorage.getItem('cm-theme')||'dark';
+  document.documentElement.setAttribute('data-theme',saved);
+  const icon=document.getElementById('themeIcon');
+  if(icon)icon.className=saved==='dark'?'ti ti-sun theme-icon':'ti ti-moon theme-icon';
+})();
+
+// ── Cart ─────────────────────────────────────────────────
+function getCart(){return JSON.parse(localStorage.getItem('cm_cart')||'[]')}
+function saveCart(c){localStorage.setItem('cm_cart',JSON.stringify(c));updateCartBadge()}
+function updateCartBadge(){const n=getCart().reduce((s,i)=>s+i.qty,0);document.querySelectorAll('.cm-cart-count').forEach(el=>{el.textContent=n})}
+function addToCart(id){
+  const p=PRODUCTS.find(x=>x.id===id);if(!p)return;
+  const c=getCart();const ex=c.find(i=>i.id===id);
+  if(ex)ex.qty++;else c.push({...p,qty:1});
+  saveCart(c);showToast('🛒 '+p.name+' added to cart!');
+}
+updateCartBadge();
+
+// ── Products ─────────────────────────────────────────────
+function renderProducts(filter){
+  const list=filter==='all'?PRODUCTS:PRODUCTS.filter(p=>p.cat===filter);
+  document.getElementById('productsGrid').innerHTML=list.map(p=>`
+    <div class="product-card" onclick="window.location.href='product.html?id=${p.id}'">
+      <div class="product-img">
+        ${p.badge?`<div class="prod-badge">${p.badge}</div>`:''}
+        <button class="wish-btn" onclick="event.stopPropagation();showToast('❤️ Saved!')">🤍</button>
+        <span>${p.emoji}</span>
+      </div>
+      <div class="product-info">
+        <div class="prod-rating"><span class="stars">★★★★★</span> ${p.rating} (${p.reviews})</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-desc">${p.desc}</div>
+        <div class="prod-footer">
+          <div class="prod-price">₹${p.price}${p.old?`<span class="old">₹${p.old}</span>`:''}</div>
+          <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">
+            <i class="ti ti-plus" style="font-size:12px" aria-hidden="true"></i> Add
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function filterCat(el,cat){
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');renderProducts(cat);
+}
+renderProducts('all');
+
+// ── Hero emoji cycle ─────────────────────────────────────
+const heroEmojis=['🍜','🍛','🍕','🍔','🍱','🥘','🫕','🍝'];
+let hIdx=0;
+setInterval(()=>{
+  const el=document.getElementById('heroEmoji');
+  el.style.transform='scale(0)';el.style.opacity='0';
+  setTimeout(()=>{
+    hIdx=(hIdx+1)%heroEmojis.length;
+    el.textContent=heroEmojis[hIdx];
+    el.style.transform='scale(1)';el.style.opacity='1';
+    el.style.transition='transform .4s ease,opacity .4s ease';
+  },300);
+},2500);
+
+// ── Login session check ───────────────────────────────────
+(function(){
+  const user = JSON.parse(localStorage.getItem('cm_user') || 'null');
+  const navLink = document.getElementById('navAuthLink');
+  if (!navLink) return;
+  if (user && user.name) {
+    navLink.innerHTML = `
+      <div style="position:relative;display:inline-block" id="userMenuWrap">
+        <button onclick="toggleUserMenu()" style="background:rgba(232,66,10,0.1);color:var(--brand);border:1px solid rgba(232,66,10,0.25);border-radius:50px;padding:0.35rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+          👤 ${user.name.split(' ')[0]}
+          <i class="ti ti-chevron-down" style="font-size:13px" aria-hidden="true"></i>
+        </button>
+        <div id="userDropdown" style="display:none;position:absolute;top:calc(100%+8px);right:0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:0.5rem;min-width:160px;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,0.12)">
+          <a href="order-success.html" style="display:block;padding:0.6rem 0.9rem;font-size:0.85rem;font-weight:500;color:var(--text);text-decoration:none;border-radius:8px">📦 My Orders</a>
+          <a href="#" onclick="logoutUser()" style="display:block;padding:0.6rem 0.9rem;font-size:0.85rem;font-weight:500;color:#E8420A;text-decoration:none;border-radius:8px">🚪 Logout</a>
+        </div>
+      </div>`;
+  } else {
+    navLink.innerHTML = '<a href="login.html" style="color:var(--muted);text-decoration:none;font-size:0.88rem;font-weight:500;transition:color .2s">Login</a>';
+  }
+})();
+
+function toggleUserMenu(){
+  const d = document.getElementById('userDropdown');
+  if(d) d.style.display = d.style.display === 'none' ? 'block' : 'none';
+}
+function logoutUser(){
+  localStorage.removeItem('cm_user');
+  localStorage.removeItem('cm_token');
+  window.location.href = 'index.html';
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('userMenuWrap');
+  const drop = document.getElementById('userDropdown');
+  if(drop && wrap && !wrap.contains(e.target)) drop.style.display = 'none';
+});
+
+// ── Canvas background grid ────────────────────────────────
+(function(){
+  const c=document.getElementById('bgCanvas');
+  const ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.strokeStyle='#E8420A';ctx.lineWidth=0.5;
+    const sz=60;
+    for(let x=0;x<c.width;x+=sz){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke()}
+    for(let y=0;y<c.height;y+=sz){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke()}
+  }
+  draw();window.addEventListener('resize',draw);
+})();
+
+// ── Toast ─────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── Hamburger ─────────────────────────────────────────────
+document.getElementById('hamBtn').addEventListener('click',()=>{
+  showToast('📱 Mobile menu — coming soon!');
+});
+</script>
+</body>
+</html>

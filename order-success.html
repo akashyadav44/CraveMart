@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Confirmed – CraveMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <script src="js/cravemart.js" defer></script>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --brand:#C8401A; --brand-dark:#9E2E0E; --brand-light:#FAF0EC;
+      --cream:#FFFBF7; --dark:#1C1208; --muted:#7A6A5A;
+      --border:#EDE5DC; --success:#2D7A3A;
+    }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--dark); }
+
+    /* NAV */
+    nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1.2rem 2.5rem; background:var(--cream);
+      border-bottom:1px solid var(--border);
+    }
+    .logo { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:700; color:var(--brand); text-decoration:none; }
+    .logo span { color:var(--dark); }
+
+    /* CONFETTI HEADER */
+    .success-header {
+      text-align:center; padding:3rem 2rem 2rem;
+      background:linear-gradient(180deg, #FFF6F3 0%, var(--cream) 100%);
+    }
+    .checkmark {
+      width:80px; height:80px; background:var(--success); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 1.5rem; font-size:2.2rem;
+      animation: popIn .5s cubic-bezier(.175,.885,.32,1.275);
+    }
+    @keyframes popIn { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+    .confetti { font-size:2rem; margin-bottom:1rem; display:block;
+      animation:float 2s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .success-title { font-family:'Fraunces',serif; font-size:2.2rem; font-weight:700; margin-bottom:0.5rem; }
+    .success-sub { color:var(--muted); font-size:0.95rem; margin-bottom:0.5rem; }
+    .order-id { font-size:0.82rem; color:var(--muted); margin-bottom:2rem; }
+    .order-id strong { color:var(--brand); font-weight:700; }
+
+    /* ETA PILL */
+    .eta-pill {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--dark); color:#fff; border-radius:50px;
+      padding:0.6rem 1.4rem; font-size:0.9rem; font-weight:600; margin-bottom:0.5rem;
+    }
+    .eta-dot { width:8px; height:8px; background:#4CAF50; border-radius:50%; animation:pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* MAIN LAYOUT */
+    .main-layout {
+      display:grid; grid-template-columns:1fr 380px;
+      gap:2rem; padding:2rem 2.5rem 4rem; max-width:1100px; margin:0 auto;
+    }
+
+    /* TRACKING CARD */
+    .track-card {
+      background:#fff; border:1px solid var(--border); border-radius:24px; padding:1.8rem;
+      margin-bottom:1.5rem;
+    }
+    .track-title { font-family:'Fraunces',serif; font-size:1.2rem; font-weight:700; margin-bottom:1.8rem; }
+
+    /* STEPPER */
+    .stepper { position:relative; }
+    .step-item { display:flex; gap:1.2rem; position:relative; padding-bottom:1.8rem; }
+    .step-item:last-child { padding-bottom:0; }
+    .step-item::before {
+      content:''; position:absolute; left:17px; top:36px;
+      width:2px; height:calc(100% - 18px);
+      background:var(--border); z-index:0;
+    }
+    .step-item.done::before  { background:var(--success); }
+    .step-item.active::before{ background:linear-gradient(var(--success), var(--border)); }
+    .step-item:last-child::before { display:none; }
+
+    .step-dot {
+      width:36px; height:36px; border-radius:50%; border:2px solid var(--border);
+      background:#fff; display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; font-size:1rem; position:relative; z-index:1; transition:all .3s;
+    }
+    .step-item.done .step-dot   { background:var(--success); border-color:var(--success); }
+    .step-item.active .step-dot {
+      background:var(--brand); border-color:var(--brand);
+      box-shadow:0 0 0 4px rgba(200,64,26,0.15);
+      animation:pulseBorder 1.5s infinite;
+    }
+    @keyframes pulseBorder { 0%,100%{box-shadow:0 0 0 4px rgba(200,64,26,.15)} 50%{box-shadow:0 0 0 8px rgba(200,64,26,.05)} }
+
+    .step-body { padding-top:4px; }
+    .step-name { font-weight:600; font-size:0.95rem; color:var(--dark); }
+    .step-item.done .step-name   { color:var(--success); }
+    .step-item.active .step-name { color:var(--brand); }
+    .step-time { font-size:0.78rem; color:var(--muted); margin-top:2px; }
+    .step-desc { font-size:0.82rem; color:var(--muted); margin-top:4px; line-height:1.5; }
+
+    /* LIVE MAP PLACEHOLDER */
+    .map-card {
+      background:#fff; border:1px solid var(--border); border-radius:24px; overflow:hidden; margin-bottom:1.5rem;
+    }
+    .map-area {
+      height:220px; background:linear-gradient(135deg,#E8F5E9 0%, #F0F8F0 100%);
+      display:flex; align-items:center; justify-content:center; position:relative;
+      border-bottom:1px solid var(--border);
+    }
+    .map-grid {
+      position:absolute; inset:0;
+      background-image:linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size:40px 40px; opacity:.5;
+    }
+    .map-route {
+      position:absolute; width:60%; height:3px;
+      background:linear-gradient(90deg, var(--success), var(--brand));
+      border-radius:4px; top:50%; left:20%; transform:translateY(-50%);
+    }
+    .map-marker { position:absolute; font-size:2rem; animation:bounce .7s ease-in-out infinite alternate; }
+    .map-marker.start { left:18%; top:42%; }
+    .map-marker.rider { left:55%; top:36%; animation-duration:.5s; }
+    .map-marker.dest  { right:14%; top:42%; }
+    @keyframes bounce { to { transform:translateY(-6px); } }
+    .map-info {
+      padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between;
+    }
+    .map-eta-text { font-weight:600; font-size:0.9rem; }
+    .map-eta-num  { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:700; color:var(--brand); }
+    .map-driver   { display:flex; align-items:center; gap:10px; }
+    .driver-avatar {
+      width:40px; height:40px; border-radius:50%; background:var(--brand-light);
+      display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+    }
+    .driver-name  { font-weight:600; font-size:0.88rem; }
+    .driver-sub   { font-size:0.75rem; color:var(--muted); }
+    .call-btn {
+      width:34px; height:34px; background:var(--success); border:none; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:1rem; cursor:pointer; transition:transform .2s;
+    }
+    .call-btn:hover { transform:scale(1.1); }
+
+    /* ORDER SUMMARY RIGHT */
+    .summary-card {
+      background:#fff; border:1px solid var(--border); border-radius:24px;
+      padding:1.5rem; margin-bottom:1.5rem;
+    }
+    .summary-title { font-family:'Fraunces',serif; font-size:1.1rem; font-weight:700; margin-bottom:1.2rem; }
+    .order-item { display:flex; align-items:center; gap:10px; padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
+    .order-item:last-child { border-bottom:none; }
+    .o-emoji { font-size:1.3rem; }
+    .o-name  { flex:1; font-weight:500; }
+    .o-qty   { color:var(--muted); font-size:0.78rem; }
+    .o-price { font-weight:700; }
+    .pricing-rows { margin-top:1rem; }
+    .price-row { display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.6rem; color:var(--muted); }
+    .price-row.total { color:var(--dark); font-weight:700; font-size:1rem; margin-top:0.5rem; border-top:1px solid var(--border); padding-top:0.6rem; }
+    .price-row.total .val { font-family:'Fraunces',serif; font-size:1.2rem; }
+
+    /* ADDRESS CARD */
+    .addr-card2 {
+      background:#fff; border:1px solid var(--border); border-radius:24px;
+      padding:1.2rem 1.5rem; margin-bottom:1.5rem;
+      display:flex; align-items:flex-start; gap:12px;
+    }
+    .addr-icon { font-size:1.5rem; flex-shrink:0; }
+    .addr-title { font-weight:700; font-size:0.9rem; margin-bottom:4px; }
+    .addr-text  { font-size:0.82rem; color:var(--muted); line-height:1.6; }
+
+    /* BUTTONS */
+    .btn-primary {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      background:var(--brand); color:#fff; border:none; border-radius:50px;
+      padding:0.85rem 2rem; font-family:'DM Sans',sans-serif;
+      font-size:0.95rem; font-weight:700; cursor:pointer; text-decoration:none; transition:all .2s;
+    }
+    .btn-primary:hover { background:var(--brand-dark); transform:translateY(-1px); }
+    .btn-outline2 {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      background:transparent; color:var(--dark); border:1.5px solid var(--border);
+      border-radius:50px; padding:0.85rem 1.8rem;
+      font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:500;
+      cursor:pointer; text-decoration:none; transition:all .2s;
+    }
+    .btn-outline2:hover { border-color:var(--dark); }
+    .action-btns { display:flex; gap:1rem; flex-wrap:wrap; }
+
+    /* TOAST */
+    .notify {
+      position:fixed; bottom:2rem; right:2rem; background:var(--dark); color:#fff;
+      padding:0.9rem 1.4rem; border-radius:16px; font-size:0.85rem; font-weight:500;
+      opacity:0; transform:translateY(20px); transition:all .3s; pointer-events:none; z-index:999;
+    }
+    .notify.show { opacity:1; transform:translateY(0); }
+
+    @media (max-width:900px) {
+      .main-layout { grid-template-columns:1fr; padding:1.5rem; }
+      nav { padding:1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="cm-navbar-root"></div>
+
+
+
+<!-- Success Header -->
+<div class="success-header">
+  <span class="confetti">🎉</span>
+  <div class="checkmark">✓</div>
+  <div class="success-title">Order Confirmed!</div>
+  <div class="success-sub">Your food is being prepared with love 🍳</div>
+  <div class="order-id">Order ID: <strong>#CM-2025-00842</strong></div>
+  <div class="eta-pill">
+    <div class="eta-dot"></div>
+    Estimated delivery in <span id="countdown">28:00</span>
+  </div>
+</div>
+
+<div class="main-layout">
+
+  <!-- LEFT -->
+  <div>
+
+    <!-- Live Map -->
+    <div class="map-card">
+      <div class="map-area">
+        <div class="map-grid"></div>
+        <div class="map-route"></div>
+        <div class="map-marker start">🏪</div>
+        <div class="map-marker rider" id="riderMarker">🛵</div>
+        <div class="map-marker dest">📍</div>
+      </div>
+      <div class="map-info">
+        <div>
+          <div class="map-eta-text">Arriving in</div>
+          <div class="map-eta-num" id="mapEta">28 mins</div>
+        </div>
+        <div class="map-driver">
+          <div class="driver-avatar">🧑‍🍳</div>
+          <div>
+            <div class="driver-name">Rajan K.</div>
+            <div class="driver-sub">⭐ 4.9 · 432 deliveries</div>
+          </div>
+          <button class="call-btn" onclick="showNotify('📞 Calling Rajan...')">
+            <i class="ti ti-phone" style="font-size:15px"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Tracker -->
+    <div class="track-card">
+      <div class="track-title">Live Order Status</div>
+      <div class="stepper" id="stepper">
+
+        <div class="step-item done">
+          <div class="step-dot">✓</div>
+          <div class="step-body">
+            <div class="step-name">Order Placed</div>
+            <div class="step-time" id="t0"></div>
+            <div class="step-desc">Your order has been received and confirmed.</div>
+          </div>
+        </div>
+
+        <div class="step-item done">
+          <div class="step-dot">✓</div>
+          <div class="step-body">
+            <div class="step-name">Payment Confirmed</div>
+            <div class="step-time" id="t1"></div>
+            <div class="step-desc">₹836 paid via Stripe · Order #CM-2025-00842</div>
+          </div>
+        </div>
+
+        <div class="step-item active" id="stepPreparing">
+          <div class="step-dot">🍳</div>
+          <div class="step-body">
+            <div class="step-name">Preparing your food</div>
+            <div class="step-time" id="t2">In progress…</div>
+            <div class="step-desc">Our chefs are cooking your Butter Chicken & Pizza.</div>
+          </div>
+        </div>
+
+        <div class="step-item" id="stepPickup">
+          <div class="step-dot">🛵</div>
+          <div class="step-body">
+            <div class="step-name">Out for Delivery</div>
+            <div class="step-time">—</div>
+            <div class="step-desc">Your rider will pick up your order.</div>
+          </div>
+        </div>
+
+        <div class="step-item" id="stepDelivered">
+          <div class="step-dot">🏠</div>
+          <div class="step-body">
+            <div class="step-name">Delivered</div>
+            <div class="step-time">—</div>
+            <div class="step-desc">Enjoy your meal! Rate your experience.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="action-btns">
+      <a href="index.html" class="btn-primary"><i class="ti ti-bowl"></i> Order Again</a>
+      <button class="btn-outline2" onclick="showNotify('🔄 Reorder placed!')"><i class="ti ti-refresh"></i> Reorder Same</button>
+      <button class="btn-outline2" onclick="showNotify('❌ Cancel requested')"><i class="ti ti-x"></i> Cancel</button>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+
+    <!-- Order Items -->
+    <div class="summary-card">
+      <div class="summary-title">Your Items</div>
+      <div class="order-item"><span class="o-emoji">🍛</span><span class="o-name">Butter Chicken</span><span class="o-qty">×1</span><span class="o-price">₹249</span></div>
+      <div class="order-item"><span class="o-emoji">🍕</span><span class="o-name">Margherita Pizza</span><span class="o-qty">×2</span><span class="o-price">₹638</span></div>
+      <div class="order-item"><span class="o-emoji">🥭</span><span class="o-name">Mango Lassi</span><span class="o-qty">×1</span><span class="o-price">₹89</span></div>
+      <div class="pricing-rows">
+        <div class="price-row"><span>Subtotal</span><span>₹976</span></div>
+        <div class="price-row"><span>Delivery</span><span>₹40</span></div>
+        <div class="price-row"><span>Tax (5%)</span><span>₹49</span></div>
+        <div class="price-row"><span style="color:var(--success)">CRAVE30</span><span style="color:var(--success)">−₹293</span></div>
+        <div class="price-row total"><span>Total Paid</span><span class="val">₹772</span></div>
+      </div>
+    </div>
+
+    <!-- Delivery Address -->
+    <div class="addr-card2">
+      <div class="addr-icon">🏠</div>
+      <div>
+        <div class="addr-title">Delivering to — Home</div>
+        <div class="addr-text">42, Nehru Nagar, Koregaon Park<br>Pune, Maharashtra — 411001</div>
+      </div>
+    </div>
+
+    <!-- Rate Experience -->
+    <div class="summary-card">
+      <div class="summary-title">Rate Your Experience</div>
+      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">How was your order so far?</div>
+      <div id="ratingStars" style="display:flex;gap:0.5rem;font-size:2rem;cursor:pointer;margin-bottom:1rem">
+        <span onclick="rate(1)">⭐</span>
+        <span onclick="rate(2)">⭐</span>
+        <span onclick="rate(3)">⭐</span>
+        <span onclick="rate(4)">⭐</span>
+        <span onclick="rate(5)">⭐</span>
+      </div>
+      <textarea style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;resize:none" rows="2" placeholder="Leave a comment (optional)…"></textarea>
+      <button class="btn-primary" style="margin-top:0.75rem;border-radius:12px;padding:0.7rem 1.5rem;font-size:0.88rem" onclick="submitRating()">Submit Review</button>
+    </div>
+  </div>
+</div>
+
+<div class="notify" id="notify"></div>
+
+<script>
+  // ── Countdown timer ────────────────────────────────────────────
+  let totalSecs = 28 * 60;
+  Navbar.render();
+
+  const tick = setInterval(() => {
+    if (totalSecs <= 0) { clearInterval(tick); document.getElementById('countdown').textContent = '🎉 Arrived!'; return; }
+    totalSecs--;
+    const m = String(Math.floor(totalSecs / 60)).padStart(2,'0');
+    const s = String(totalSecs % 60).padStart(2,'0');
+    document.getElementById('countdown').textContent = `${m}:${s}`;
+    const remaining = Math.ceil(totalSecs / 60);
+    document.getElementById('mapEta').textContent = remaining + ' mins';
+  }, 1000);
+
+  // ── Timestamps ─────────────────────────────────────────────────
+  const now = new Date();
+  document.getElementById('t0').textContent = now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const t1 = new Date(now.getTime() + 1 * 60000);
+  document.getElementById('t1').textContent = t1.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+  // ── Auto-advance tracker (demo) ────────────────────────────────
+  setTimeout(() => {
+    document.getElementById('stepPreparing').classList.remove('active');
+    document.getElementById('stepPreparing').classList.add('done');
+    document.getElementById('stepPreparing').querySelector('.step-dot').textContent = '✓';
+    document.getElementById('t2').textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('stepPickup').classList.add('active');
+    showNotify('🛵 Your rider is on the way!');
+  }, 12000);
+
+  setTimeout(() => {
+    document.getElementById('stepPickup').classList.remove('active');
+    document.getElementById('stepPickup').classList.add('done');
+    document.getElementById('stepPickup').querySelector('.step-dot').textContent = '✓';
+    document.getElementById('stepDelivered').classList.add('active');
+    document.getElementById('mapEta').textContent = '5 mins';
+    showNotify('📍 Almost there! 5 minutes away.');
+  }, 25000);
+
+  // ── Rating ─────────────────────────────────────────────────────
+  function rate(n) {
+    const stars = document.querySelectorAll('#ratingStars span');
+    stars.forEach((s, i) => s.textContent = i < n ? '⭐' : '☆');
+    showNotify('Thanks for the ' + n + '-star rating!');
+  }
+  function submitRating() { showNotify('🙏 Review submitted! Thank you.'); }
+
+  let notifyTimer;
+  function showNotify(msg) {
+    const n = document.getElementById('notify');
+    n.textContent = msg;
+    n.classList.add('show');
+    clearTimeout(notifyTimer);
+    notifyTimer = setTimeout(() => n.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
