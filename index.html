@@ -334,7 +334,7 @@
       Cart
       <span class="cart-dot cm-cart-count">0</span>
     </a>
-    <button class="hamburger" id="hamBtn" aria-label="Menu"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+    <button class="hamburger" id="hamBtn" onclick="Drawer.open()" aria-label="Open menu"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
   </div>
 </nav>
 
@@ -366,7 +366,7 @@
         <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(180deg) translateX(190px) rotate(-180deg)">🧅</div>
         <div class="ring-dot" style="transform:translate(-50%,-50%) rotate(300deg) translateX(190px) rotate(-300deg)">🫚</div>
       </div>
-      <div class="bowl-emoji" id="heroEmoji">🍜</div>
+    <div class="bowl-emoji" id="heroEmoji" style="transition:transform .4s ease,opacity .4s ease">🍜</div>
     </div>
     <div class="floating-pill pill1">
       <div class="pill-icon">⚡</div>
@@ -410,7 +410,7 @@
       <div class="promo-tag">Limited Time</div>
       <h2>First order<br>30% off.</h2>
       <p>Use code CRAVE30 at checkout. New users only.<br>Free delivery included!</p>
-      <!-- <a href="signup.html" class="btn-white"><i class="ti ti-gift" aria-hidden="true"></i> Claim Offer</a> -->
+      <a href="signup.html" class="btn-white"><i class="ti ti-gift" aria-hidden="true"></i> Claim Offer</a>
     </div>
     <div class="promo-emoji-wrap">🎊</div>
   </div>
@@ -419,10 +419,10 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Crave<span>Mart</span></div>
-  <div class="footer-copy">© 2026 CraveMart — Made with ❤️ for food lovers</div>
+  <div class="footer-copy">© 2025 CraveMart — Made with ❤️ for food lovers</div>
   <div style="font-size:0.8rem;color:var(--muted)">
-    <!-- <a href="login.html" style="color:var(--muted);text-decoration:none;margin-right:1rem">Login</a>
-    <a href="signup.html" style="color:var(--muted);text-decoration:none">Sign up</a> -->
+    <a href="login.html" style="color:var(--muted);text-decoration:none;margin-right:1rem">Login</a>
+    <a href="signup.html" style="color:var(--muted);text-decoration:none">Sign up</a>
   </div>
 </footer>
 
@@ -501,13 +501,15 @@ const heroEmojis=['🍜','🍛','🍕','🍔','🍱','🥘','🫕','🍝'];
 let hIdx=0;
 setInterval(()=>{
   const el=document.getElementById('heroEmoji');
-  el.style.transform='scale(0)';el.style.opacity='0';
+  if(!el) return;
+  el.style.transform='scale(0)';
+  el.style.opacity='0';
   setTimeout(()=>{
     hIdx=(hIdx+1)%heroEmojis.length;
     el.textContent=heroEmojis[hIdx];
-    el.style.transform='scale(1)';el.style.opacity='1';
-    el.style.transition='transform .4s ease,opacity .4s ease';
-  },300);
+    el.style.transform='scale(1)';
+    el.style.opacity='1';
+  },350);
 },2500);
 
 // ── Login session check ───────────────────────────────────
@@ -572,10 +574,8 @@ function showToast(msg){
   toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-// ── Hamburger ─────────────────────────────────────────────
-document.getElementById('hamBtn').addEventListener('click',()=>{
-  showToast('📱 Mobile menu — coming soon!');
-});
+// ── Drawer init ───────────────────────────────────────────
+Drawer.inject();
 </script>
 </body>
 </html>
