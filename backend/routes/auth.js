@@ -4,7 +4,7 @@ const bcrypt  = require('bcryptjs');
 const jwt     = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-// ── User Model seedha yahan define karo ────────────────────
+// ── define user model here  ────────────────────
 if (mongoose.models.User) delete mongoose.models.User;
 
 const userSchema = new mongoose.Schema({
@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
     // Password hash
     const hashed = await bcrypt.hash(password, 10);
 
-    // User banao
+    // create user
     const user = await User.create({
       firstName,
       lastName,
@@ -87,7 +87,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid email ya password' });
     }
 
-    // Password match karo
+    // Password match
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid email ya password' });

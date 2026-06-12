@@ -78,7 +78,7 @@
         <div class="perk"><div class="perk-icon"><i class="ti ti-star"></i></div><div class="perk-text"><strong>Loyalty points</strong> on every order</div></div>
       </div>
     </div>
-    <div class="left-footer">© 2025 CraveMart · All rights reserved</div>
+    <div class="left-footer">© 2026 CraveMart · All rights reserved</div>
   </div>
 
   <div class="right-panel">
@@ -196,12 +196,12 @@
     const pw  = document.getElementById('regPwd').value;
     const pw2 = document.getElementById('regPwd2').value;
 
-    if(!fn||!ln||!em||!ph||!pw){showError('Sab fields required hain.');return;}
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){showError('Valid email address enter karo.');return;}
-    if(!/^\d{10}$/.test(ph)){showError('Valid 10-digit phone number enter karo.');return;}
-    if(pw.length<6){showError('Password kam se kam 6 characters ka hona chahiye.');return;}
-    if(pw!==pw2){showError('Passwords match nahi kar rahe.');return;}
-    if(!document.getElementById('termsCheck').checked){showError('Terms of Service se agree karo.');return;}
+    if(!fn||!ln||!em||!ph||!pw){showError('All fields are required.');return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){showError('enter valid email address.');return;}
+    if(!/^\d{10}$/.test(ph)){showError('Valid 10-digit phone number required.');return;}
+    if(pw.length<6){showError('Password must be at least 6 characters long.');return;}
+    if(pw!==pw2){showError('Passwords do not match.');return;}
+    if(!document.getElementById('termsCheck').checked){showError('Please agree to the Terms of Service and Privacy Policy.');return;}
 
     const btn=document.getElementById('signupBtn');
     const sp=document.getElementById('signupSpinner');
@@ -219,11 +219,11 @@
       btn.disabled=false; sp.style.display='none'; bt.textContent='Create my account';
 
       if(err.message.includes('fetch')||err.message.includes('Failed')){
-        showError('Backend server nahi chal raha. Server start karo phir try karo.');
+        showError('backend server not responding.');
       } else if(err.message.includes('already')||err.message.includes('registered')){
-        showError('Yeh email already registered hai. Login karo ya doosra email use karo.');
+        showError('this email is already registered .' );
       } else {
-        showError(err.message||'Kuch galat ho gaya. Dobara try karo.');
+        showError(err.message||'An error occurred.');
       }
     }
   }

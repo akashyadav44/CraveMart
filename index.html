@@ -304,13 +304,17 @@
 
     @media(max-width:900px){
       .hero{grid-template-columns:1fr;padding:5rem 1.5rem 3rem;min-height:auto}
-      .hero-visual{display:none}
       .navbar{padding:0 1.5rem}
       .nav-links{display:none}
       .hamburger{display:flex}
       .section,.promo-section{padding:3rem 1.5rem}
       .promo-wrap{padding:2rem;flex-direction:column;gap:1.5rem}
       .hero-stats{gap:1.5rem}
+      .hero-visual{display:flex;justify-content:center;margin-top:1.5rem}
+      .main-bowl{width:180px;height:180px}
+      .orbit-ring{display:none}
+      .floating-pill{display:none}
+      .bowl-emoji{font-size:4rem}
     }
   </style>
 </head>
@@ -410,7 +414,7 @@
       <div class="promo-tag">Limited Time</div>
       <h2>First order<br>30% off.</h2>
       <p>Use code CRAVE30 at checkout. New users only.<br>Free delivery included!</p>
-      <a href="signup.html" class="btn-white"><i class="ti ti-gift" aria-hidden="true"></i> Claim Offer</a>
+      <button class="btn-white" id="claimBtn" onclick="claimOffer()"><i class="ti ti-gift" aria-hidden="true"></i> <span id="claimBtnText">Claim Offer</span></button>
     </div>
     <div class="promo-emoji-wrap">🎊</div>
   </div>
@@ -421,8 +425,8 @@
   <div class="footer-logo">Crave<span>Mart</span></div>
   <div class="footer-copy">© 2025 CraveMart — Made with ❤️ for food lovers</div>
   <div style="font-size:0.8rem;color:var(--muted)">
-    <a href="login.html" style="color:var(--muted);text-decoration:none;margin-right:1rem">Login</a>
-    <a href="signup.html" style="color:var(--muted);text-decoration:none">Sign up</a>
+    <!-- <a href="login.html" style="color:var(--muted);text-decoration:none;margin-right:1rem">Login</a>
+    <a href="signup.html" style="color:var(--muted);text-decoration:none">Sign up</a> -->
   </div>
 </footer>
 
@@ -572,6 +576,42 @@ function showToast(msg){
   t.textContent=msg;t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── Claim Offer — Smart button ───────────────────────────
+function claimOffer(){
+  const user = JSON.parse(localStorage.getItem('cm_user') || 'null');
+  const code = 'CRAVE30';
+
+  if (user) {
+    // Already logged in — copy code to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('claimBtnText');
+        if(btn) btn.textContent = '✅ Copied! Paste at checkout';
+        showToast('🎉 Code CRAVE30 copied! Paste karo checkout pe!');
+        setTimeout(() => { if(btn) btn.textContent = 'Claim Offer'; }, 3000);
+      }).catch(() => fallbackCopy(code));
+    } else {
+      fallbackCopy(code);
+    }
+  } else {
+    // Not logged in — go to signup
+    window.location.href = 'signup.html';
+  }
+}
+
+function fallbackCopy(code) {
+  const el = document.createElement('input');
+  el.value = code;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  const btn = document.getElementById('claimBtnText');
+  if(btn) btn.textContent = '✅ CRAVE30 Copied!';
+  showToast('🎉 Code CRAVE30 copied! Paste karo checkout pe!');
+  setTimeout(() => { if(btn) btn.textContent = 'Claim Offer'; }, 3000);
 }
 
 // ── Drawer init ───────────────────────────────────────────

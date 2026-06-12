@@ -75,7 +75,7 @@
         <div class="perk"><div class="perk-icon"><i class="ti ti-gift"></i></div><div class="perk-text"><strong>Exclusive offers</strong> only for members</div></div>
       </div>
     </div>
-    <div class="left-footer">© 2025 CraveMart · All rights reserved</div>
+    <div class="left-footer">© 2026 CraveMart · All rights reserved</div>
   </div>
 
   <div class="right-panel">
@@ -86,7 +86,7 @@
 
         <!-- Server offline notice -->
         <div class="offline-notice" id="offlineNotice">
-          ⚠️ Backend server nahi mila. <a href="#" onclick="showSetupHelp()" style="color:var(--brand)">Setup guide dekho</a> ya demo mode mein try karo.
+          If server not running,. <a href="#" onclick="showSetupHelp()" style="color:var(--brand)">Setup guide</a> or try "Demo Mode".
         </div>
 
         <!-- Error box -->
@@ -96,8 +96,8 @@
         </div>
 
         <div class="social-btns">
-          <button class="social-btn" onclick="Toast.show('🔐 Google — backend mein implement karo!')">🌐 Google</button>
-          <button class="social-btn" onclick="Toast.show('🔐 Apple — backend mein implement karo!')">🍎 Apple</button>
+          <button class="social-btn" onclick="Toast.show('🔐 Google — implement in backend!')">🌐 Google</button>
+          <button class="social-btn" onclick="Toast.show('🔐 Apple — implement in backend!')">🍎 Apple</button>
         </div>
         <div class="divider-text">or continue with email</div>
 
@@ -125,7 +125,7 @@
 
         <!-- Demo mode button -->
         <button class="btn-submit" style="background:#fff;color:var(--dark);border:1.5px solid var(--border)" onclick="demoLogin()">
-          🧪 Demo Mode (bina server ke)
+          🧪 Demo Mode (no server required)
         </button>
 
         <div style="font-size:.75rem;color:var(--muted);text-align:center;line-height:1.6;margin-top:.5rem">
@@ -180,8 +180,8 @@
     const email = document.getElementById('loginEmail').value.trim();
     const pwd   = document.getElementById('loginPwd').value;
 
-    if (!email || !pwd) { showError('Email aur password dono required hain.'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Valid email address enter karo.'); return; }
+    if (!email || !pwd) { showError('Email and password are required.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Valid email address required.'); return; }
 
     const btn = document.getElementById('loginBtn');
     const sp  = document.getElementById('loginSpinner');
@@ -204,7 +204,7 @@
 
       // If server not running, suggest demo
       if (err.message.includes('fetch') || err.message.includes('Failed')) {
-        showError('Backend server nahi chal raha. "Demo Mode" try karo ya server start karo.');
+        showError('If server not running, Try "Demo Mode" or start the server.');
         document.getElementById('offlineNotice').classList.add('show');
       } else {
         showError(err.message || 'Invalid email or password.');
@@ -215,7 +215,7 @@
   // Demo mode — without backend
   function demoLogin() {
     Auth.setUser({ name: 'Demo User', email: 'demo@cravemart.com', role: 'user' });
-    Toast.show('✅ Demo mode mein logged in!');
+    Toast.show('✅ logged in as Demo User!');
     setTimeout(() => {
       const redirect = localStorage.getItem('cm_redirect') || 'index.html';
       localStorage.removeItem('cm_redirect');
@@ -224,7 +224,7 @@
   }
 
   function showSetupHelp() {
-    alert('Backend start karne ke liye:\n\n1. Terminal open karo\n2. cd cravemart/backend\n3. npm install\n4. .env file mein MONGO_URI set karo\n5. npm run dev\n\nPhir yeh page refresh karo!');
+    alert('to start backend:\n\n1. Open terminal\n2. cd cravemart/backend\n3. npm install\n4. .env file  set MONGO_URI \n5. npm run dev\n\nthen refresh the page !');
   }
 
   document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });

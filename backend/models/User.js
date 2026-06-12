@@ -1,7 +1,7 @@
  const mongoose = require('mongoose');
 const bcrypt   = require('bcryptjs');
 
-// Pehle check karo model already exist karta hai ya nahi
+// check if model already exists
 if (mongoose.models.User) {
   delete mongoose.models.User;
 }
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   role:      { type: String, enum: ['user', 'admin'], default: 'user' },
 }, { timestamps: true });
 
-// Password hash karo save se pehle
+// to hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 10);

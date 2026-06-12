@@ -41,7 +41,7 @@ async function seed() {
     // Data clear karo
     await Product.deleteMany();
     await User.deleteMany();
-    console.log('🗑️  Purana data clear ho gaya');
+    console.log('🗑️  older data cleared');
 
     // Products daalo
     await Product.insertMany([
@@ -54,7 +54,7 @@ async function seed() {
       { name:'Paneer Tikka',     description:'Charred paneer, peppers, mint chutney',                  price:179, originalPrice:229, emoji:'🧆', category:'indian',  badge:'Veg',        isVeg:true,  rating:4.8, numReviews:289, calories:340, prepTime:20 },
       { name:'BBQ Chicken Pizza',description:'Smoky BBQ sauce, grilled chicken, red onions',           price:349, originalPrice:429, emoji:'🍕', category:'pizza',   badge:null,         isVeg:false, rating:4.6, numReviews:143, calories:510, prepTime:20 },
     ]);
-    console.log('✅ 8 products add ho gaye');
+    console.log('✅ 8 products are added to the database');
 
     // Admin user
     const adminPass = await bcrypt.hash('admin123', 10);
@@ -74,7 +74,7 @@ async function seed() {
     });
     console.log('✅ Demo:  demo@cravemart.com / demo123');
 
-    console.log('\n🎉 Database ready! Ab "npm run dev" chalao\n');
+    console.log('\n🎉 Database ready! now "npm run dev" to start the server\n');
     process.exit(0);
   } catch (err) {
     console.error('❌ Error:', err.message);
