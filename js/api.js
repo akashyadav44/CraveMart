@@ -3,7 +3,8 @@
    Sab frontend pages yahi use karenge
    ============================================================ */
 
-const API_BASE = 'http://localhost:3001/api';
+// const API_BASE = 'http://localhost:3001/api';
+const API_BASE = 'https://cravemart.onrender.com/api';
 
 const API = {
 
