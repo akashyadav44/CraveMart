@@ -423,7 +423,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Crave<span>Mart</span></div>
-  <div class="footer-copy">© 2025 CraveMart — Made with ❤️ for food lovers</div>
+  <div class="footer-copy">© 2026 CraveMart — Made with Developer akash</div>
   <div style="font-size:0.8rem;color:var(--muted)">
     <!-- <a href="login.html" style="color:var(--muted);text-decoration:none;margin-right:1rem">Login</a>
     <a href="signup.html" style="color:var(--muted);text-decoration:none">Sign up</a> -->
@@ -589,7 +589,7 @@ function claimOffer(){
       navigator.clipboard.writeText(code).then(() => {
         const btn = document.getElementById('claimBtnText');
         if(btn) btn.textContent = '✅ Copied! Paste at checkout';
-        showToast('🎉 Code CRAVE30 copied! Paste karo checkout pe!');
+        showToast('🎉 Code CRAVE30 copied! Paste it at checkout');
         setTimeout(() => { if(btn) btn.textContent = 'Claim Offer'; }, 3000);
       }).catch(() => fallbackCopy(code));
     } else {
@@ -610,7 +610,7 @@ function fallbackCopy(code) {
   document.body.removeChild(el);
   const btn = document.getElementById('claimBtnText');
   if(btn) btn.textContent = '✅ CRAVE30 Copied!';
-  showToast('🎉 Code CRAVE30 copied! Paste karo checkout pe!');
+  showToast('🎉 Code CRAVE30 copied! Paste it at checkout');
   setTimeout(() => { if(btn) btn.textContent = 'Claim Offer'; }, 3000);
 }
 
